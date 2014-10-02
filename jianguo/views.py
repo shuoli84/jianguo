@@ -1,6 +1,7 @@
 import json
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView
 from jianguo.forms import UploadProfileImage
 
@@ -25,16 +26,11 @@ profile = ProfileView.as_view()
 
 
 @login_required
-def upload_avatar(request):
-    if request.method != 'POST':
-        return HttpResponse(json.dumps({
-            "error": "The endpoint can only be posted",
-        }), status=400, content_type="application/json")
-
+@require_http_methods(["POST"])
+def upload_picture(request):
     form = UploadProfileImage(request.POST, request.FILES)
     if form.is_valid():
-        request.user.profile.avatar = request.FILES['picture']
-        request.user.profile.save()
+
         return HttpResponse(status=200)
     else:
         return HttpResponse(json.dumps({

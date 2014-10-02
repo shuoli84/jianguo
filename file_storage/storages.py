@@ -6,6 +6,7 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import Storage
 from django.db import IntegrityError
 from django.middleware.transaction import transaction
+import time
 from file_storage.models import File
 
 
@@ -23,7 +24,6 @@ class DatabaseStorage(Storage):
         count = 10
         content_data = content.file.read()
         while count:
-            count -= 1
             try:
                 with transaction.atomic():
                     file_record = File()
@@ -33,8 +33,12 @@ class DatabaseStorage(Storage):
                     file_record.save()
                     return file_record.path
             except IntegrityError, e:
-                filename = u'%s_%d' % (original_name, random.randrange(0, 10000))
-                continue
+                if count:
+                    count -= 1
+                    filename = u'%s_%d' % (original_name, hash(time.time()))
+                    continue
+                else:
+                    raise
 
     def open(self, name, mode='rb'):
         file_record = File.objects.get(path=name)
