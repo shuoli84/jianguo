@@ -5,8 +5,22 @@ block head
   title 坚果
 
 block body
-  body.login_background
-    .row
-      form
-        .row
-          .span2.logo(href='javascript:void(0)') waht
+  body.login-background
+    form.login-form.large-4.columns.large-centered
+      .row
+        .logo.large-6.columns.large-centered
+        p.slogon.large-8.columns.large-centered
+          | 写下你的故事 我们一起精彩
+      .row
+        .large-12.columns
+          input(type="text", placeholder="邮箱")
+      .row
+        .large-12.columns
+          input(type="password", placeholder="密码")
+      .row.action
+        .large-8.columns.large-centered
+          .row
+            a.large-5.button.tiny.left(href="#") 登陆
+            - url 'register' as register_url
+            a.large-5.button.tiny.right(href="{{register_url}}") 注册
+

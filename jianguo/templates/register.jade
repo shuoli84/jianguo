@@ -1,0 +1,28 @@
+extends base.jade
+
+block head
+  {{block.super}}
+  title 注册
+
+block content
+  .row.margin-top-xl
+    form.large-4.columns.large-centered
+      .row
+        .large-12.columns
+          h4 欢迎加入坚果
+      .row
+        .large-12.columns.margin-top-m
+          input(type="text", placeholder="邮箱")
+      .row
+        .large-12.columns
+          input(type="password", placeholder="密码")
+      .row
+        .large-12.columns
+          input(type="text", placeholder="姓名")
+      .row
+        .large-12.columns
+          input(type="text", placeholder="邀请码")
+
+      .row.action
+        .large-4.columns.large-centered.margin-top-m
+          a.button.tiny.large-12.columns(href="#") 注册

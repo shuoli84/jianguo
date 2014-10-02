@@ -9,6 +9,8 @@ class Profile(models.Model):
     name = models.TextField(u'名字')
     introduction = models.TextField(u'简介')
 
+    avatar = models.ImageField(u'头像', null=True)
+
     def __unicode__(self):
         return self.name
 

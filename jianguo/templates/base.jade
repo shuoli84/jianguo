@@ -6,5 +6,16 @@ head
     meta(http-equiv="X-UA-Compatible", content="IE=edge")
     link(href="/static/stylesheets/app.css", media="screen, projection", rel="stylesheet", type="text/css")
     script(src="/static/bower_components/modernizr/modernizr.js")
+    script(src="/static/bower_components/jquery/dist/jquery.min.js")
+    script(src="/static/bower_components/foundation/js/foundation.min.js")
 
 block body
+  body
+    nav.top-bar.large(role="navigation", data-topbar)
+      ul.title-area
+        li.name
+          h1
+            a.logo(href="/")
+      section.top-bar-section
+
+    block content

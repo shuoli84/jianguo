@@ -42,6 +42,8 @@ INSTALLED_APPS = (
     'allauth.account',
     'allauth.socialaccount.providers.weibo',
     'allauth.socialaccount.providers.google',
+
+    'file_storage',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -64,8 +66,11 @@ WSGI_APPLICATION = 'jianguo.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'jianguo',
+        'USER': 'jianguo',
+        'PASSWORD': 'jianguo_pass',
+        'HOST': ''
     }
 }
 
@@ -113,3 +118,6 @@ AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 )
+
+MEDIA_URL = '/media/'
+DEFAULT_FILE_STORAGE = 'file_storage.storages.DatabaseStorage'
