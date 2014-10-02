@@ -1,4 +1,5 @@
 import json
+from django.core.files.storage import default_storage
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
@@ -30,13 +31,14 @@ profile = ProfileView.as_view()
 def upload_picture(request):
     form = UploadProfileImage(request.POST, request.FILES)
     if form.is_valid():
-
-        return HttpResponse(status=200)
+        file = request.FILES['picture']
+        path = default_storage.save('pictures/' + file.name, file)
+        return HttpResponse(json.dumps({
+            'path': path,
+        }), content_type='application/json')
     else:
         return HttpResponse(json.dumps({
             "error": form.errors
         }), status=400, content_type="applicatoin/json")
-
-
 
 
