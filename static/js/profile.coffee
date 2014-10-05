@@ -44,9 +44,23 @@ $('#js-image-input').change ->
   $('.btn-set-profile').click (e)->
     e.preventDefault()
     data = $("#js-profile").cropper("getData")
-    
-    console.log(data)
-    $('#myModal').foundation('reveal', 'close')
+    console.log data
+    console.log $('#js-profile').attr('src')
+    $.ajax
+      url: '/accounts/profile/setProfile/',
+      type: 'POST'
+      data:{
+        x: data.x
+        y: data.y
+        width: data.width
+        height: data.height
+        picture: $('#js-profile').attr('src')
+      }
+    .then (data)->
+      $('#myModal').foundation('reveal', 'close')
+      $('.profile-image').attr('src', data.path)
+    .fail (err, xhr)->
+      console.log err
 
   $.ajax
     url: '/upload/picture/'

@@ -22,14 +22,20 @@ class DatabaseStorage(Storage):
         filename = original_name
 
         count = 10
-        content_data = content.file.read()
+        if hasattr(content, 'file'):
+            content_data = content.file.read()
+        elif hasattr(content, 'read'):
+            content_data = content.read()
+        else:
+            raise ValueError("Don't know how to read content")
+
         while count:
             try:
                 with transaction.atomic():
                     file_record = File()
                     file_record.path = filename + ext
                     file_record.content = content_data
-                    file_record.size = len(content)
+                    file_record.size = len(content_data)
                     file_record.save()
                     return file_record.path
             except IntegrityError, e:

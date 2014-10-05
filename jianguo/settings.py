@@ -126,3 +126,5 @@ AUTHENTICATION_BACKENDS = (
 
 MEDIA_URL = '/media/'
 DEFAULT_FILE_STORAGE = 'file_storage.storages.DatabaseStorage'
+
+PROFILE_SIZE = (140, 140)
