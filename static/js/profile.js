@@ -46,6 +46,16 @@
         return xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
       }
     });
+    $("#js-profile").cropper({
+      aspectRatio: 1.0
+    });
+    $('.btn-set-profile').click(function(e) {
+      var data;
+      e.preventDefault();
+      data = $("#js-profile").cropper("getData");
+      console.log(data);
+      return $('#myModal').foundation('reveal', 'close');
+    });
     return $.ajax({
       url: '/upload/picture/',
       data: formData,
@@ -53,7 +63,8 @@
       contentType: false,
       type: 'POST'
     }).then(function(data) {
-      return console.log(data);
+      $('#myModal').foundation('reveal', 'open');
+      return $("#js-profile").cropper("setImgSrc", data.path);
     }).fail(function(err, xhr) {
       return console.log(err);
     });

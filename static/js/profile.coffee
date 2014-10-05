@@ -38,6 +38,16 @@ $('#js-image-input').change ->
     if not safeMethod(settings.type) and sameOrigin(settings.url)
       xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'))
 
+  $("#js-profile").cropper
+      aspectRatio: 1.0
+
+  $('.btn-set-profile').click (e)->
+    e.preventDefault()
+    data = $("#js-profile").cropper("getData")
+    
+    console.log(data)
+    $('#myModal').foundation('reveal', 'close')
+
   $.ajax
     url: '/upload/picture/'
     data: formData
@@ -45,7 +55,8 @@ $('#js-image-input').change ->
     contentType: false,
     type: 'POST',
   .then (data)->
-    console.log data
+    $('#myModal').foundation('reveal', 'open')
+    $("#js-profile").cropper("setImgSrc", data.path)
   .fail (err, xhr)->
     console.log err
 

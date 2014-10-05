@@ -3,6 +3,8 @@ extends base.jade
 block head
   {{block.super}}
   title 修改个人资料
+  link(href="/static/bower_components/cropper/dist/cropper.min.css", rel="stylesheet", type="text/css")
+
 
 block content
   .row.margin-top-xl
@@ -13,10 +15,10 @@ block content
       .row
         .margin-top-m
           .large-6.columns
-
+            img
           .large-6.columns
             .row
-              input#js-image-input.hidden-for-large-down(type="file", name="picture")
+              input#js-image-input(type="file", name="picture", style="display:none")
               a.button.tiny.large-10.large-centered.select-image-btn(href="#") 选择头像
 
       .row
@@ -30,4 +32,11 @@ block content
         .large-4.columns.large-centered.margin-top-m
           a.button.tiny.large-12.columns(href="#") 保存
 
+  #myModal.reveal-modal(data-reveal=true)
+    img#js-profile(style="max-width: 140px; max-height: 140px")
+    a.button.tiny.btn-set-profile(href="#") 确定
+    a.close-reveal-modal &#215;
+
+  script(type="text/javascript", src="/static/bower_components/cropper/dist/cropper.min.js")
   script(type="text/javascript", src="/static/js/profile.js")
+

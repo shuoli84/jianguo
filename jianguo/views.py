@@ -31,10 +31,10 @@ profile = ProfileView.as_view()
 def upload_picture(request):
     form = UploadProfileImage(request.POST, request.FILES)
     if form.is_valid():
-        file = request.FILES['picture']
-        path = default_storage.save('pictures/' + file.name, file)
+        pic_file = request.FILES['picture']
+        path = default_storage.save('pictures/' + pic_file.name, pic_file)
         return HttpResponse(json.dumps({
-            'path': path,
+            'path': '/media/' + path,
         }), content_type='application/json')
     else:
         return HttpResponse(json.dumps({
