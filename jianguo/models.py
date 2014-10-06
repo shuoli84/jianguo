@@ -19,8 +19,8 @@ class Profile(models.Model):
 
 class Article(models.Model):
     author = models.ForeignKey(User)
-    title = models.TextField(u'标题')
-    content = models.TextField(u'内容')
+    title = models.TextField(u'标题', blank=True)
+    content = models.TextField(u'内容', blank=True)
     created_at = models.DateTimeField(auto_created=True)
 
     def __unicode__(self):

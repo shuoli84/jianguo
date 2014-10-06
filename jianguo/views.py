@@ -1,6 +1,7 @@
 import json
 from PIL import Image
 from cStringIO import StringIO
+import bleach
 from django.conf import settings
 from django.core.files.storage import default_storage
 from django.contrib.auth.decorators import login_required
@@ -110,6 +111,17 @@ def set_profile_picture(request):
 class EditArticleView(TemplateView):
     template_name = 'edit_article.jade'
 
+    def get_context_data(self, **kwargs):
+        context = super(EditArticleView, self).get_context_data(**kwargs)
+        article_id = kwargs.pop('article_id', None)
+        if article_id is None:
+            article = Article()
+            article.save()
+        else:
+            article = get_object_or_404(Article, pk=article_id)
+        context.update({'article': article})
+        return context
+
     def post(self, request):
         title = request.POST.get('title', None)
         content = request.POST.get('content', None)
@@ -124,7 +136,7 @@ class EditArticleView(TemplateView):
         if title:
             article.title = title
         if article:
-            # TODO DO HTML SANITIZE
+            content = bleach.clean(content)
             article.content = content
 
         article.save()

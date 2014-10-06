@@ -10,10 +10,11 @@ block head
 block content
   .row.margin-top-xl
     .large-12.columns.large-centered
-      .editable
+      input.article-title-edit(type='text', name='title', placeholder='标题', value='{{article.title}}')
   .row.margin-top-m
     .large-12.columns.large-centered
-      .editable
+      .editable(data-placeholder='内容')
+        {{article.content | safe}}
 
   script(src="/static/js/edit_article.js")
 

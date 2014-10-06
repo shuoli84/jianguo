@@ -14,8 +14,8 @@ setInterval ->
       type: 'POST'
       data: {
         'article_id': 1
-        title: ob.element-0.value
-        content: ob.element-1.value
+        title: $('input[name=title]').val()
+        content: ob['element-0'].value
       }
     .then (data)->
       console.log 'succeeded'
