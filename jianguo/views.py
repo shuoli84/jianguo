@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.files.storage import default_storage
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
@@ -17,6 +17,11 @@ from jianguo.models import Article
 
 class IndexView(TemplateView):
     template_name = 'index.jade'
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return HttpResponseRedirect('/home/')
+        super(IndexView, self).dispatch(request, *args, **kwargs)
 
 
 index = IndexView.as_view()
