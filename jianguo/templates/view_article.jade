@@ -1,0 +1,14 @@
+extends base.jade
+block head
+  {{block.super}}
+  title {{article.title}}
+  link(rel="stylesheet", href="/static/bower_components/medium-editor/dist/css/medium-editor.css")
+  link(rel="stylesheet", href="/static/bower_components/medium-editor/dist/css/themes/default.css")
+  link(rel="stylesheet", href="/static/bower_components/medium-editor-insert-plugin/dist/css/medium-editor-insert-plugin.min.css")
+block content
+  .row.margin-top-xl
+    .large-12.columns.large-centered
+      h3.title {{article.title}}
+  .row.margin-top-m
+    .large-12.columns.large-centered
+      {{article.content | safe}}

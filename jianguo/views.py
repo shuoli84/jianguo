@@ -137,8 +137,6 @@ class EditArticleView(TemplateView):
         'figure': ['class']
     })
 
-
-
     def get_context_data(self, **kwargs):
         context = super(EditArticleView, self).get_context_data(**kwargs)
         article_id = kwargs.pop('article_id', None)
@@ -150,13 +148,10 @@ class EditArticleView(TemplateView):
         context.update({'article': article})
         return context
 
-    def post(self, request):
+    def post(self, request, **kwargs):
         title = request.POST.get('title', None)
         content = request.POST.get('content', None)
-        article_id = request.POST.get('article_id', None)
-
-        if article_id is None:
-            return HttpResponseBadRequest('aticle_id not supplied')
+        article_id = kwargs['article_id']
 
         article = get_object_or_404(Article, pk=article_id)
         if article.author_id != request.user.id:
@@ -172,3 +167,16 @@ class EditArticleView(TemplateView):
 
 
 edit_article = EditArticleView.as_view()
+
+
+class ViewArticleView(TemplateView):
+    template_name = 'view_article.jade'
+
+    def get_context_data(self, **kwargs):
+        context = super(ViewArticleView, self).get_context_data(**kwargs)
+        article_id = kwargs['article_id']
+        article = get_object_or_404(Article, pk=article_id)
+        context.update({'article': article})
+        return context
+
+view_article = ViewArticleView.as_view()
