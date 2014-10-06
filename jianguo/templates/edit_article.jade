@@ -1,0 +1,19 @@
+extends base.jade
+
+block head
+  {{block.super}}
+  title 文章
+  link(rel="stylesheet", href="/static/bower_components/medium-editor/dist/css/medium-editor.css")
+  link(rel="stylesheet", href="/static/bower_components/medium-editor/dist/css/themes/default.css")
+  script(src="/static/bower_components/medium-editor/dist/js/medium-editor.min.js")
+
+block content
+  .row.margin-top-xl
+    .large-12.columns.large-centered
+      .editable
+  .row.margin-top-m
+    .large-12.columns.large-centered
+      .editable
+
+  script(src="/static/js/edit_article.js")
+

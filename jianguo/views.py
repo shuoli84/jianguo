@@ -4,11 +4,13 @@ from cStringIO import StringIO
 from django.conf import settings
 from django.core.files.storage import default_storage
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
+from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView
 from jianguo.forms import UploadProfileImage
+from jianguo.models import Article
 
 
 class IndexView(TemplateView):
@@ -103,3 +105,30 @@ def set_profile_picture(request):
     return HttpResponse(json.dumps({
             'path': settings.MEDIA_URL + new_path
         }), status=200, content_type="application/json")
+
+
+class EditArticleView(TemplateView):
+    template_name = 'edit_article.jade'
+
+    def post(self, request):
+        title = request.POST.get('title', None)
+        content = request.POST.get('content', None)
+        article_id = request.POST.get('article_id', None)
+
+        if article_id is None:
+            return HttpResponseBadRequest('aticle_id not supplied')
+
+        article = get_object_or_404(Article, pk=article_id)
+        if article.author_id != request.user.id:
+            return HttpResponseForbidden('You are not the arthor')
+        if title:
+            article.title = title
+        if article:
+            # TODO DO HTML SANITIZE
+            article.content = content
+
+        article.save()
+        return HttpResponse(status=200)
+
+
+edit_article = EditArticleView.as_view()

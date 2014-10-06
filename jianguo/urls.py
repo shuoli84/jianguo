@@ -10,5 +10,7 @@ urlpatterns = patterns('',
     url(r'^accounts/', include('allauth.urls')),
 
     url(r'^upload/picture/', 'jianguo.views.upload_picture'),
-    url(r'^media/(?P<path>.*)$', 'file_storage.views.serve')
+    url(r'^media/(?P<path>.*)$', 'file_storage.views.serve'),
+
+    url(r'^article/edit/', 'jianguo.views.edit_article'),
 )
