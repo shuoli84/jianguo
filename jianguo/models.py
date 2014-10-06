@@ -1,6 +1,7 @@
 # coding=utf-8
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_save
 
 
 class Profile(models.Model):
@@ -23,3 +24,16 @@ class Article(models.Model):
 
     def __unicode__(self):
         return self.title
+
+
+
+def create_profile(sender, **kw):
+    """
+    Create the user profile when a user object is created
+    """
+    user = kw["instance"]
+    if kw["created"]:
+        profile = Profile(user=user)
+        profile.save()
+
+post_save.connect(create_profile, sender=User, dispatch_uid="users-profile-creation-signal")
