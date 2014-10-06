@@ -110,6 +110,34 @@ def set_profile_picture(request):
 
 class EditArticleView(TemplateView):
     template_name = 'edit_article.jade'
+    allowed_tags = bleach.ALLOWED_TAGS + [
+        'p',
+        'u',
+        'div',
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'h5',
+        'h6',
+        'img',
+        'figure',
+        'br',
+        'table',
+        'thead',
+        'tbody',
+        'tr',
+        'th',
+        'td',
+    ]
+    allowed_attributes = bleach.ALLOWED_ATTRIBUTES
+    allowed_attributes.update({
+        'img': ['src', 'alt'],
+        'div': ['class', 'id'],
+        'figure': ['class']
+    })
+
+
 
     def get_context_data(self, **kwargs):
         context = super(EditArticleView, self).get_context_data(**kwargs)
@@ -136,7 +164,7 @@ class EditArticleView(TemplateView):
         if title:
             article.title = title
         if article:
-            content = bleach.clean(content)
+            content = bleach.clean(content, tags=self.allowed_tags, attributes=self.allowed_attributes)
             article.content = content
 
         article.save()

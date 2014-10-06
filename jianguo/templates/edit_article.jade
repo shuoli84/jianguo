@@ -5,7 +5,9 @@ block head
   title 文章
   link(rel="stylesheet", href="/static/bower_components/medium-editor/dist/css/medium-editor.css")
   link(rel="stylesheet", href="/static/bower_components/medium-editor/dist/css/themes/default.css")
+  link(rel="stylesheet", href="/static/bower_components/medium-editor-insert-plugin/dist/css/medium-editor-insert-plugin.min.css")
   script(src="/static/bower_components/medium-editor/dist/js/medium-editor.min.js")
+  script(src="/static/bower_components/medium-editor-insert-plugin/dist/js/medium-editor-insert-plugin.all.min.js")
 
 block content
   .row.margin-top-xl
@@ -15,6 +17,11 @@ block content
     .large-12.columns.large-centered
       .editable(data-placeholder='内容')
         {{article.content | safe}}
+
+  .row.action
+    a.button.tiny.btn-save(href="#") 保存
+    a.button.tiny.btn-publish(href="#") 发布
+
 
   script(src="/static/js/edit_article.js")
 
