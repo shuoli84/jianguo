@@ -5,6 +5,7 @@ import bleach
 from django.conf import settings
 from django.core.files.storage import default_storage
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
@@ -175,7 +176,7 @@ class ViewArticleView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ViewArticleView, self).get_context_data(**kwargs)
         article_id = kwargs['article_id']
-        article = get_object_or_404(Article, pk=article_id)
+        article = get_object_or_404(Article, pk=article_id, published=True)
         context.update({'article': article})
         return context
 
@@ -188,7 +189,7 @@ class UserHomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(UserHomeView, self).get_context_data(**kwargs)
         context.update({
-            'articles': Article.objects.all()
+            'articles': Article.objects.filter(Q(published=True) | Q(author_id=self.request.user.id))
         })
         return context
 

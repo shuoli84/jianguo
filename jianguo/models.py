@@ -22,6 +22,7 @@ class Article(models.Model):
     title = models.TextField(u'标题', blank=True)
     content = models.TextField(u'内容', blank=True)
     created_at = models.DateTimeField(auto_created=True)
+    published = models.BooleanField(u'是否发布', default=False)
 
     def __unicode__(self):
         return self.title
