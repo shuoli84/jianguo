@@ -180,3 +180,20 @@ class ViewArticleView(TemplateView):
         return context
 
 view_article = ViewArticleView.as_view()
+
+
+class UserHomeView(TemplateView):
+    template_name = 'user_home.jade'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserHomeView, self).get_context_data(**kwargs)
+        context.update({
+            'articles': Article.objects.all()
+        })
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(UserHomeView, self).dispatch(*args, **kwargs)
+
+user_home = UserHomeView.as_view()

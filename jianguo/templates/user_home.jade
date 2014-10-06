@@ -1,3 +1,26 @@
-//
-   Created by lishuo on 14-10-6.
+extends base
+
+- load humanize
+
+block head
+  {{block.super}}
+  title {{user.profile.name}}的首页
+
+block content
+  .row.margin-top-xl
+    h3 动态
+    each article in articles
+      .row
+        .large-10.columns.article-box.margin-top-m.well-s
+          .row
+            .large-2.columns.medium-2.small-3
+              a(href="#")
+                img.item-profile-image(src="{{MEDIA_URL}}{{article.author.profile.avatar}}")
+            .large-2.columns.medium-2.small-2
+              h4 {{article.author.profile.name}}
+              p {{article.author.profile.career}}
+            .large-8.columns.medium-8.small-7
+              h4
+                a(href="/article/{{article.id}}/") {{article.title}}
+              p {{article.created_at | naturaltime}}
 
