@@ -2,7 +2,40 @@
 (function() {
   $(document).foundation();
 
-  $('.select-image-btn').click(function(e) {
+  $(document).ajaxSend(function(event, xhr, settings) {
+    var getCookie, safeMethod, sameOrigin;
+    getCookie = function(name) {
+      var cookie, cookieValue, cookies, i, _i, _ref;
+      cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        cookies = document.cookie.split(';');
+        for (i = _i = 0, _ref = document.cookie.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+          cookie = jQuery.trim(cookies[i]);
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    };
+    sameOrigin = function(url) {
+      var host, origin, protocol, sr_origin;
+      host = document.location.host;
+      protocol = document.location.protocol;
+      sr_origin = '//' + host;
+      origin = protocol + sr_origin;
+      return (url === origin || url.slice(0, origin.length + 1) === origin + '/') || (url === sr_origin || url.slice(0, sr_origin.length + 1) === sr_origin + '/') || !(/^(\/\/|http:|https:).*/.test(url));
+    };
+    safeMethod = function(method) {
+      return /^(GET|HEAD|OPTIONS|TRACE)$/.test(method);
+    };
+    if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+      return xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+    }
+  });
+
+  $('.select-image-btn').click(function() {
     return $('#js-image-input').click();
   });
 
@@ -14,38 +47,6 @@
     }
     formData = new FormData();
     formData.append('picture', file, file.name);
-    $(document).ajaxSend(function(event, xhr, settings) {
-      var getCookie, safeMethod, sameOrigin;
-      getCookie = function(name) {
-        var cookie, cookieValue, cookies, i, _i, _ref;
-        cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-          cookies = document.cookie.split(';');
-          for (i = _i = 0, _ref = document.cookie.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
-            cookie = jQuery.trim(cookies[i]);
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-              break;
-            }
-          }
-        }
-        return cookieValue;
-      };
-      sameOrigin = function(url) {
-        var host, origin, protocol, sr_origin;
-        host = document.location.host;
-        protocol = document.location.protocol;
-        sr_origin = '//' + host;
-        origin = protocol + sr_origin;
-        return (url === origin || url.slice(0, origin.length + 1) === origin + '/') || (url === sr_origin || url.slice(0, sr_origin.length + 1) === sr_origin + '/') || !(/^(\/\/|http:|https:).*/.test(url));
-      };
-      safeMethod = function(method) {
-        return /^(GET|HEAD|OPTIONS|TRACE)$/.test(method);
-      };
-      if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
-        return xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-      }
-    });
     $("#js-profile").cropper({
       aspectRatio: 1.0
     });
@@ -81,6 +82,24 @@
     }).then(function(data) {
       $('#myModal').foundation('reveal', 'open');
       return $("#js-profile").cropper("setImgSrc", data.path);
+    }).fail(function(err, xhr) {
+      return console.log(err);
+    });
+  });
+
+  $('.btn-confirm').click(function() {
+    var career, introduction;
+    career = $('input[name=career]').val();
+    introduction = $('textarea[name=introduction]').val();
+    return $.ajax({
+      url: '/accounts/profile/',
+      data: {
+        career: career,
+        introduction: introduction
+      },
+      type: 'POST'
+    }).then(function() {
+      return console.log('succeeded');
     }).fail(function(err, xhr) {
       return console.log(err);
     });

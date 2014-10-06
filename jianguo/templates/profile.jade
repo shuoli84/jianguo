@@ -15,7 +15,7 @@ block content
       .row
         .margin-top-m
           .large-6.columns
-            img.profile-image
+            img.profile-image(src="{{MEDIA_URL}}{{profile.avatar}}")
           .large-6.columns
             .row
               input#js-image-input(type="file", name="picture", style="display:none")
@@ -23,14 +23,16 @@ block content
 
       .row
         .large-12.columns
-          input(type="text", placeholder="职业")
+          value = profile.career
+          input(type="text", placeholder="职业", name='career', value="{{value}}")
       .row
         .large-12.columns
-          textarea(type="text", placeholder="介绍", rows=3)
+          intro = profile.introduction or ''
+          textarea(type="text", placeholder="介绍", name='introduction', rows=3) {{intro}}
 
       .row.action
         .large-4.columns.large-centered.margin-top-m
-          a.button.tiny.large-12.columns(href="#") 保存
+          a.button.tiny.large-12.columns.btn-confirm(href="#") 保存
 
   #myModal.reveal-modal(data-reveal=true)
     img#js-profile(style="max-width: 140px; max-height: 140px")

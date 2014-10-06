@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core.files.storage import default_storage
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView
 from jianguo.forms import UploadProfileImage
@@ -26,6 +27,32 @@ register = RegisterView.as_view()
 class ProfileView(TemplateView):
     template_name = 'profile.jade'
 
+    def get_context_data(self, **kwargs):
+        profile = self.request.user.profile
+        context_data = super(ProfileView, self).get_context_data()
+        context_data.update({
+            'profile': profile
+        })
+        return context_data
+
+    def post(self, request):
+        career = request.POST.get('career', None)
+        introduction = request.POST.get('introduction', None)
+
+        profile = request.user.profile
+
+        if career:
+            profile.career = career
+        if introduction:
+            profile.introduction = introduction
+
+        profile.save()
+        return HttpResponse(status=200)
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ProfileView, self).dispatch(*args, **kwargs)
+
 profile = ProfileView.as_view()
 
 
@@ -46,7 +73,8 @@ def upload_picture(request):
 
 
 @login_required
-def set_profile(request):
+@require_http_methods(['POST'])
+def set_profile_picture(request):
     picture = request.POST['picture']
     x = request.POST.get('x', '0')
     y = request.POST.get('y', '0')
@@ -75,4 +103,3 @@ def set_profile(request):
     return HttpResponse(json.dumps({
             'path': settings.MEDIA_URL + new_path
         }), status=200, content_type="application/json")
-

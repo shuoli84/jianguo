@@ -8,7 +8,8 @@ class Profile(models.Model):
     user = models.OneToOneField(User)
 
     name = models.TextField(u'名字')
-    introduction = models.TextField(u'简介')
+    career = models.TextField(u'职业', blank=True, null=True)
+    introduction = models.TextField(u'简介', blank=True, null=True)
 
     avatar = models.ImageField(u'头像', null=True)
 
@@ -24,7 +25,6 @@ class Article(models.Model):
 
     def __unicode__(self):
         return self.title
-
 
 
 def create_profile(sender, **kw):
