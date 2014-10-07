@@ -6,11 +6,11 @@ block head
 
 block body
   body.login-background
-    form.login-form.large-4.columns.large-centered(action="/accounts/login/?next=/home/", method="POST")
+    form.login-form.large-4.medium-6.columns.large-centered.medium-centered(action="/accounts/login/?next=/home/", method="POST")
       -csrf_token
       .row
-        .logo.large-6.columns.large-centered
-        p.slogon.large-8.columns.large-centered
+        .logo.large-6.medium-6.columns.large-centered.medium-centered.small-centered
+        p.slogon.large-8.medium-8.columns.large-centered.medium-centered
           | 写下你的故事 我们一起精彩
       .row
         .large-12.columns
@@ -19,8 +19,12 @@ block body
         .large-12.columns
           {{form.password}}
       .row.action
-        .large-8.columns.large-centered
+        .large-8.medium-10.small-10.columns.large-centered.medium-centered.small-centered
           .row
-            button.large-5.button.tiny.left(type="submit") 登录
-            a.large-5.button.tiny.right(href="/accounts/register/") 注册
+            .large-offset-1.large-5.medium-offset-1.medium-5.small-offset-1.small-5.columns
+              button.button.visible-for-small-only(type="submit") 登录
+              button.button.tiny.visible-for-medium-up(type="submit") 登录
+            .large-offset-1.large-5.medium-offset-1.medium-5.small-offset-1.small-5.columns
+              a.button.visible-for-small-only(href="/accounts/register/") 注册
+              a.button.tiny.visible-for-medium-up(href="/accounts/register/") 注册
 

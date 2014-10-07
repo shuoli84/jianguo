@@ -7,32 +7,40 @@ block head
 
 
 block content
-  .row.margin-top-xl
-    form.large-4.columns.large-centered
-      .row
-        .large-12.columns
-          h4 修改资料
-      .row
-        .margin-top-m
-          .large-6.columns
-            img.profile-image(src="{{profile.avatar.url}}")
-          .large-6.columns
+  .large-4.columns.large-centered
+    .row.margin-top-xl
+      form(action="/accounts/logout/", method="post")
+        -csrf_token
+        button.button.tiny.secondary(type="submit") 登出
+
+    .row
+      form
+        .row
+          .large-12.columns
+            h4 修改资料
+        .row
+          .margin-top-m
+            .large-6.columns
+              img.profile-image(src="{{profile.avatar.url}}")
+            .large-6.columns
+              .row
+                input#js-image-input(type="file", name="picture", style="display:none")
+                a.button.tiny.large-10.large-centered.select-image-btn(href="#") 选择头像
+
+        .row
+          .large-12.columns
+            value = profile.career or ''
+            input(type="text", placeholder="职业", name='career', value="{{value}}")
+        .row
+          .large-12.columns
+            intro = profile.introduction or ''
+            textarea(type="text", placeholder="介绍", name='introduction', rows=3) {{intro}}
+
+        .row.action
+          .large-8.columns.large-centered.margin-top-m
             .row
-              input#js-image-input(type="file", name="picture", style="display:none")
-              a.button.tiny.large-10.large-centered.select-image-btn(href="#") 选择头像
-
-      .row
-        .large-12.columns
-          value = profile.career or ''
-          input(type="text", placeholder="职业", name='career', value="{{value}}")
-      .row
-        .large-12.columns
-          intro = profile.introduction or ''
-          textarea(type="text", placeholder="介绍", name='introduction', rows=3) {{intro}}
-
-      .row.action
-        .large-4.columns.large-centered.margin-top-m
-          a.button.tiny.large-12.columns.btn-confirm(href="#") 保存
+              .large-6.columns
+                a.button.tiny.btn-confirm(href="#") 保存
 
   #myModal.reveal-modal(data-reveal=true)
     img#js-profile(style="max-width: 140px; max-height: 140px")
