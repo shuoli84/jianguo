@@ -47,6 +47,22 @@ saveArticle = ->
   .fail (err)->
     console.log 'failed ' + err
 
+publishArticle = ->
+  $.ajax
+    url: '/article/' + data.article_id + '/publish/'
+    type: 'POST'
+    data: {
+      publish: true
+    }
+  .then (data)->
+    console.log 'succeeded'
+  .fail (err)->
+    console.log 'failed ' + err
+
 $('.btn-save').click (e)->
   e.preventDefault()
   saveArticle()
+
+$('.btn-publish').click (e)->
+  e.preventDefault()
+  publishArticle()

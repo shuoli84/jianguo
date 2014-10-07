@@ -14,7 +14,8 @@ urlpatterns = patterns('',
 
     url(r'^article/new/', 'jianguo.views.new_article'),
     url(r'^article/(?P<article_id>\w+)/edit/', 'jianguo.views.edit_article'),
-    url(r'^article/(?P<article_id>\d+)/', 'jianguo.views.view_article'),
+    url(r'^article/(?P<article_id>\w+)/publish/', 'jianguo.views.publish_article'),
+    url(r'^article/(?P<article_id>\w+)/', 'jianguo.views.view_article'),
 
     url(r'^home/', 'jianguo.views.user_home'),
 )

@@ -209,13 +209,32 @@ def new_article(request):
     return HttpResponseRedirect('/article/%s/edit/' % article.id)
 
 
+@login_required
+@require_http_methods(['POST'])
+def publish_article(request, article_id):
+    article = get_object_or_404(Article, pk=article_id)
+    if article.author_id != request.user.id:
+        return HttpResponseForbidden('You are not the author')
+    should_publish = request.POST.get('publish', 'true')
+
+    if should_publish == 'true':
+        article.published = True
+    else:
+        article.published = False
+
+    article.save()
+    return HttpResponse(json.dumps({
+        'published': article.published
+    }), status=200, content_type='application/json')
+
+
 class UserHomeView(TemplateView):
     template_name = 'user_home.jade'
 
     def get_context_data(self, **kwargs):
         context = super(UserHomeView, self).get_context_data(**kwargs)
         context.update({
-            'articles': Article.objects.filter(Q(published=True) | Q(author_id=self.request.user.id))
+            'articles': Article.objects.filter(Q(published=True) | Q(author_id=self.request.user.id)).order_by('-created_at')
         })
         return context
 
