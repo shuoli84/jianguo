@@ -1,6 +1,7 @@
 import json
 from PIL import Image
 from cStringIO import StringIO
+from allauth.account.views import SignupView
 import bleach
 from django.conf import settings
 from django.core.files.storage import default_storage
@@ -11,7 +12,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView
-from jianguo.forms import UploadProfileImage
+from jianguo.forms import UploadProfileImage, RegisterForm
 from jianguo.models import Article
 
 
@@ -27,8 +28,9 @@ class IndexView(TemplateView):
 index = IndexView.as_view()
 
 
-class RegisterView(TemplateView):
+class RegisterView(SignupView):
     template_name = 'register.jade'
+    form_class = RegisterForm
 
 register = RegisterView.as_view()
 
@@ -95,7 +97,8 @@ def set_profile_picture(request):
     width = int(width)
     height = int(height)
 
-    picture = picture.lstrip('/media/')
+    if picture.startswith('/media/'):
+        picture = picture[7:]
 
     with default_storage.open(picture) as f:
         original = Image.open(f)

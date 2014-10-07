@@ -45,9 +45,8 @@ INSTALLED_APPS = (
     'allauth',
     'allauth.socialaccount',
     'allauth.account',
-    'allauth.socialaccount.providers.weibo',
-    'allauth.socialaccount.providers.google',
-
+#    'allauth.socialaccount.providers.weibo',
+#    'allauth.socialaccount.providers.google',
     'file_storage',
 )
 
@@ -133,3 +132,7 @@ MEDIA_URL = '/media/'
 DEFAULT_FILE_STORAGE = 'file_storage.storages.DatabaseStorage'
 
 PROFILE_SIZE = (140, 140)
+
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
+DEFAULT_AVATAR = '/static/images/profile-default.png'

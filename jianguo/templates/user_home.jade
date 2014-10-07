@@ -15,7 +15,7 @@ block content
           .row
             .large-2.columns.medium-2.small-3
               a(href="#")
-                img.item-profile-image(src="{{MEDIA_URL}}{{article.author.profile.avatar}}")
+                img.item-profile-image(src="{{article.author.profile.avatar.url}}")
             .large-2.columns.medium-2.small-2
               h4 {{article.author.profile.name}}
               p {{article.author.profile.career}}

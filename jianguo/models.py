@@ -1,4 +1,5 @@
 # coding=utf-8
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
@@ -11,7 +12,7 @@ class Profile(models.Model):
     career = models.TextField(u'职业', blank=True, null=True)
     introduction = models.TextField(u'简介', blank=True, null=True)
 
-    avatar = models.ImageField(u'头像', null=True)
+    avatar = models.ImageField(u'头像', null=True, default=settings.DEFAULT_AVATAR)
 
     def __unicode__(self):
         return self.name

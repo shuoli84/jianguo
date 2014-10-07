@@ -18,6 +18,7 @@ class DatabaseStorage(Storage):
         self.base_url = settings.MEDIA_URL
 
     def save(self, name, content):
+        name = os.path.split(name)[-1]
         original_name, ext = os.path.splitext(name)
         filename = original_name
 
