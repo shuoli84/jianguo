@@ -14,13 +14,13 @@ block body
           | 写下你的故事 我们一起精彩
       .row
         .large-12.columns
-          input(type="text", placeholder="邮箱")
+          {{form.login}}
       .row
         .large-12.columns
-          input(type="password", placeholder="密码")
+          {{form.password}}
       .row.action
         .large-8.columns.large-centered
           .row
-            button.large-5.button.tiny.left 登录
+            button.large-5.button.tiny.left(type="submit") 登录
             a.large-5.button.tiny.right(href="/accounts/register/") 注册
 

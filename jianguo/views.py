@@ -1,7 +1,7 @@
 import json
 from PIL import Image
 from cStringIO import StringIO
-from allauth.account.views import SignupView
+from allauth.account.views import SignupView, LoginView
 import bleach
 from django.conf import settings
 from django.core.files.storage import default_storage
@@ -16,7 +16,7 @@ from jianguo.forms import UploadProfileImage, RegisterForm
 from jianguo.models import Article
 
 
-class IndexView(TemplateView):
+class IndexView(LoginView):
     template_name = 'index.jade'
 
     def dispatch(self, request, *args, **kwargs):

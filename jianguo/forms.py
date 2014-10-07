@@ -2,6 +2,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.db import IntegrityError
+from django.utils.translation import ugettext as _
 
 
 class UploadProfileImage(forms.Form):
@@ -21,7 +22,7 @@ class RegisterForm(forms.Form):
     def clean_email(self):
         value = self.cleaned_data["email"]
         if User.objects.filter(email=value).exists():
-            raise forms.ValidationError(u'该邮箱已经注册')
+            raise forms.ValidationError(_('duplicate email'))
         return value
 
     def save(self, request):
