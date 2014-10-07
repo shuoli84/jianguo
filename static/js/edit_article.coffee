@@ -36,7 +36,7 @@ saveArticle = ->
   ob = editor.serialize()
   console.log ob
   $.ajax
-    url: '/article/1/edit/'
+    url: window.location.url
     type: 'POST'
     data: {
       title: $('input[name=title]').val()

@@ -47,7 +47,7 @@
     ob = editor.serialize();
     console.log(ob);
     return $.ajax({
-      url: '/article/1/edit/',
+      url: window.location.url,
       type: 'POST',
       data: {
         title: $('input[name=title]').val(),

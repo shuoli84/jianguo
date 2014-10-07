@@ -8,25 +8,30 @@ block head
 
 block content
   .row.margin-top-m
-    .large-offset-10.large-2.columns.text-center
+  .row.margin-top-xl
+    .large-2.medium-6.small-6.columns
+      h3 动态
+    .large-offset-6.large-2.medium-6.small-6.columns.text-right
       form(action="/article/new/", method="POST")
         -csrf_token
         button.button.tiny.round(type="submit") 写日记
-  .row.margin-top-xl
-    h3 动态
-    each article in articles
-      .row
-        .large-10.columns.article-box.margin-top-m.well-s
-          .row
-            .large-2.columns.medium-2.small-3
-              a(href="#")
-                img.item-profile-image(src="{{article.author.profile.avatar.url}}")
-            .large-2.columns.medium-2.small-2
-              h4 {{article.author.profile.name}}
-              p {{article.author.profile.career}}
-            .large-8.columns.medium-8.small-7
-              h4
-                title = article.title or '未命名'
-                a(href="/article/{{article.id}}/") {{title}}
-              p {{article.created_at | naturaltime}}
+    .large-2.columns
+
+  each article in articles
+    .row
+      .large-10.medium-12.columns.article-box.margin-top-m.well-s
+        .row
+          .large-2.columns.medium-2.small-3
+            a(href="#")
+              img.item-profile-image(src="{{article.author.profile.avatar.url}}")
+          .large-2.columns.medium-2.small-2
+            h4 {{article.author.profile.name}}
+            career = article.author.profile.career or ''
+            p {{career}}
+          .large-8.columns.medium-8.small-7
+            h4
+              title = article.title or '未命名'
+              a(href="/article/{{article.id}}/") {{title}}
+            p {{article.created_at | naturaltime}}
+      .large-2.columns.hidden-for-medium-down
 

@@ -151,11 +151,7 @@ class EditArticleView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(EditArticleView, self).get_context_data(**kwargs)
         article_id = kwargs.pop('article_id', None)
-        if article_id is None:
-            article = Article()
-            article.save()
-        else:
-            article = get_object_or_404(Article, pk=article_id)
+        article = get_object_or_404(Article, pk=article_id)
         context.update({'article': article})
         return context
 
@@ -166,7 +162,7 @@ class EditArticleView(TemplateView):
 
         article = get_object_or_404(Article, pk=article_id)
         if article.author_id != request.user.id:
-            return HttpResponseForbidden('You are not the arthor')
+            return HttpResponseForbidden(_('You are not the author'))
         if title:
             article.title = title
         if article:
