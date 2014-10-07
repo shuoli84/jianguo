@@ -19,6 +19,9 @@ block body
             a.logo(href="/")
       if user.is_authenticated
         section.top-bar-section
-          a.tiny.button(href="/accounts/logout/") 登出
+          ul.right
+            li
+              a(href="/accounts/profile/")
+                img.topbar-profile-image(src="{{user.profile.avatar.url}}")
 
     block content
