@@ -4,11 +4,17 @@
   outline: 0
 
 input.article-title-edit
+  text-align: center
   border: 0
-  outline: 0
-  box-shadow: 0
+  outline: none
+  +box-shadow(none)
   font-size: $text-m
   padding: 0
+  background: transparent
+
+  &:focus
+    +box-shadow(none)
+    outline: none
 
 .item-profile-image
   width: 80px
@@ -18,3 +24,12 @@ input.article-title-edit
 .article-box
   background: white
   height: 100px
+
+.edit-article-tool-box
+  position: fixed
+  bottom: 0
+  height: 80px
+  width: 100%
+
+.edit-content-container
+  margin-bottom: 80px
