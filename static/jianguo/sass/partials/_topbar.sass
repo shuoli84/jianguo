@@ -1,14 +1,15 @@
 @import "compass/css3"
 
 .top-bar
-  background: $color-top-bar
-
   .name
     a.logo
       height: 80px
       line-height: 80px
       width: 100px
-      margin-left: 50px
+
+@media #{$large-only}
+  .top-bar .row
+    max-width: 1000px
 
 .topbar-profile-image
   height: 60px

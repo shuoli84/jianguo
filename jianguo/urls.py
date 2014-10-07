@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^upload/picture/', 'jianguo.views.upload_picture'),
     url(r'^media/(?P<path>.*)$', 'file_storage.views.serve'),
 
+    url(r'^article/new/', 'jianguo.views.new_article'),
     url(r'^article/(?P<article_id>\w+)/edit/', 'jianguo.views.edit_article'),
     url(r'^article/(?P<article_id>\d+)/', 'jianguo.views.view_article'),
 

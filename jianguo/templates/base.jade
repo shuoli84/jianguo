@@ -13,15 +13,17 @@ head
 block body
   body
     nav.top-bar.large(role="navigation", data-topbar)
-      ul.title-area
-        li.name
-          h1
-            a.logo(href="/")
-      if user.is_authenticated
-        section.top-bar-section
-          ul.right
-            li
-              a(href="/accounts/profile/")
-                img.topbar-profile-image(src="{{user.profile.avatar.url}}")
-
+      .row
+        .large-2.medium-3.small-6.columns
+          ul.title-area
+            li.name
+              h1
+                a.logo(href="/")
+        if user.is_authenticated
+          .large-offset-8.large-2.medium-offset-6.medium-3.small-offset-2.small-4.columns
+            section.top-bar-section
+              ul
+                li.text-right
+                  a(href="/accounts/profile/")
+                    img.topbar-profile-image(src="{{user.profile.avatar.url}}")
     block content

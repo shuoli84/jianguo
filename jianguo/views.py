@@ -7,9 +7,11 @@ from django.conf import settings
 from django.core.files.storage import default_storage
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.utils.translation import gettext as _
 from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView
 from jianguo.forms import UploadProfileImage, RegisterForm
@@ -181,14 +183,34 @@ edit_article = EditArticleView.as_view()
 class ViewArticleView(TemplateView):
     template_name = 'view_article.jade'
 
+    def get(self, request, *args, **kwargs):
+        article_id = kwargs['article_id']
+        article = get_object_or_404(Article, pk=article_id)
+        if not article.published and article.author_id != self.request.user.id:
+            return HttpResponseNotFound(_("The article does not exist"))
+        if article.author_id == request.user.id:
+            return HttpResponseRedirect('/article/%s/edit/' % article_id)
+
+        return super(ViewArticleView, self).get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(ViewArticleView, self).get_context_data(**kwargs)
         article_id = kwargs['article_id']
-        article = get_object_or_404(Article, pk=article_id, published=True)
+        article = get_object_or_404(Article, pk=article_id)
         context.update({'article': article})
         return context
 
 view_article = ViewArticleView.as_view()
+
+
+@login_required
+@require_http_methods(['POST'])
+def new_article(request):
+    article = Article()
+    article.author = request.user
+    article.created_at = timezone.now()
+    article.save()
+    return HttpResponseRedirect('/article/%s/edit/' % article.id)
 
 
 class UserHomeView(TemplateView):

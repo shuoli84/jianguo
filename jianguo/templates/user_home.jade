@@ -7,6 +7,11 @@ block head
   title {{user.profile.name}}的首页
 
 block content
+  .row.margin-top-m
+    .large-offset-10.large-2.columns.text-center
+      form(action="/article/new/", method="POST")
+        -csrf_token
+        button.button.tiny.round(type="submit") 写日记
   .row.margin-top-xl
     h3 动态
     each article in articles
@@ -21,6 +26,7 @@ block content
               p {{article.author.profile.career}}
             .large-8.columns.medium-8.small-7
               h4
-                a(href="/article/{{article.id}}/") {{article.title}}
+                title = article.title or '未命名'
+                a(href="/article/{{article.id}}/") {{title}}
               p {{article.created_at | naturaltime}}
 
