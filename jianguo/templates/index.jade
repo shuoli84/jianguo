@@ -6,7 +6,8 @@ block head
 
 block body
   body.login-background
-    form.login-form.large-4.columns.large-centered
+    form.login-form.large-4.columns.large-centered(action="/accounts/login/", method="POST")
+      -csrf_token
       .row
         .logo.large-6.columns.large-centered
         p.slogon.large-8.columns.large-centered
@@ -20,7 +21,6 @@ block body
       .row.action
         .large-8.columns.large-centered
           .row
-            a.large-5.button.tiny.left(href="#") 登陆
-            - url 'register' as register_url
-            a.large-5.button.tiny.right(href="{{register_url}}") 注册
+            button.large-5.button.tiny.left 登陆
+            a.large-5.button.tiny.right(href="/accounts/register/") 注册
 

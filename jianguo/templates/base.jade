@@ -17,6 +17,8 @@ block body
         li.name
           h1
             a.logo(href="/")
-      section.top-bar-section
+      if user.is_authenticated
+        section.top-bar-section
+          a.tiny.button(href="/accounts/logout/") 登出
 
     block content

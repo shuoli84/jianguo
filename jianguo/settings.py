@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +43,7 @@ INSTALLED_APPS = (
     'jianguo',
 
     'allauth',
+    'allauth.socialaccount',
     'allauth.account',
     'allauth.socialaccount.providers.weibo',
     'allauth.socialaccount.providers.google',
@@ -109,6 +111,7 @@ STATICFILES_DIRS = (
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.request',
     'django.core.context_processors.media',
     'allauth.account.context_processors.account',
     'allauth.socialaccount.context_processors.socialaccount',
