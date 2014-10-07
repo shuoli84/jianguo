@@ -23,7 +23,7 @@ block content
 
       .row
         .large-12.columns
-          value = profile.career
+          value = profile.career or ''
           input(type="text", placeholder="职业", name='career', value="{{value}}")
       .row
         .large-12.columns
