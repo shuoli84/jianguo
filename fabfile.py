@@ -134,15 +134,15 @@ def config_webserver():
 
                 print green('Copy supervisor conf')
                 sudo('cp supervisord.conf /etc/supervisor/conf.d/jianguo.conf')
-                sudo('supervisorctl update')
-                sudo('supervisorctl start jianguo')
+                sudo('/etc/init.d/supervisor stop')
+                sudo('/etc/init.d/supervisor start')
 
                 put('nginx.conf', '/etc/nginx/sites-available/jianguo.conf', use_sudo=True)
                 with settings(warn_only=True):
-                    sudo('nginx_dissite default')
+                    sudo('rm /etc/nginx/sites-enabled/default')
 
                 sudo('nginx_ensite jianguo.conf')
-
+                sudo('service nginx reload')
 @task
 def deploy():
     execute(init)
