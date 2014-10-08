@@ -1,3 +1,5 @@
+fabtools
+fabric
 Django==1.7
 Pillow==2.6.0
 django-allauth==0.18.0

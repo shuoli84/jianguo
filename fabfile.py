@@ -1,7 +1,14 @@
 import os
+from timeit import reindent
+from fabric.colors import green
+from fabric.context_managers import *
+from fabric.contrib.files import contains, exists
 from fabric.decorators import task
+from fabric.operations import *
 from fabric.state import env
+from fabric.tasks import execute
 from fabtools import require
+from fabtools.python import virtualenv as python_virtualenv
 
 
 @task
@@ -10,22 +17,19 @@ def dev():
     env.path = '/var/deploy/jianguo'
     env.activate = 'source ' + env.path + '/virt-python/bin/activate'
     env.depot = 'git@github.com:shuoli84/jianguo.git'
-    env.depot_name = 'linbang'
+    env.depot_name = 'jianguo'
     env.branch = 'master'
-    env.mysql = True
     env.no_apt_update = True
-    env.redis_port = 6397
     env.user = "lishuo"
+
 
 def new_virtualenv():
     require.python.virtualenv(os.path.join(env.path, 'env'))
-
 
 @contextmanager
 def virtualenv():
     with python_virtualenv(os.path.join(env.path, 'env')):
         yield
-
 
 @task
 def install_nginx():
@@ -37,11 +41,6 @@ def install_nginx():
 
         require.deb.package('nginx')
         put("vender/nginx_util/*",  "/usr/bin/", use_sudo=True, mode="770")
-
-@task
-def install_redis():
-    with hide("output"):
-        require.redis.instance('linbang-chat', bind='0.0.0.0', port=env.redis_port)
 
 @task
 def init():
@@ -56,8 +55,8 @@ def init():
             sudo('apt-get update')
 
         require.directory(env.path, mode="777", use_sudo=True)
-        require.directory('/var/run/linbang', owner='www-data', group='www-data', mode='770', use_sudo=True)
-        require.directory('/var/log/linbang/', owner='www-data', group='www-data', mode='770', use_sudo=True)
+        require.directory('/var/run/jianguo/', owner='www-data', group='www-data', mode='770', use_sudo=True)
+        require.directory('/var/log/jianguo/', owner='www-data', group='www-data', mode='770', use_sudo=True)
         require.directory('/var/log/supervisord/', owner='www-data', group='www-data', mode='770', use_sudo=True)
         require.directory('/var/run/supervisord/', owner='www-data', group='www-data', mode='770', use_sudo=True)
         require.directory('~/.ssh', mode='700')
@@ -76,13 +75,6 @@ def init():
         sudo('adduser %s www-data' % me)
 
         install_nginx()
-        install_redis()
-
-        require.mysql.server(password='Linbang')
-        with settings(mysql_user='root', mysql_password='Linbang'):
-            require.mysql.user('linbang', 'Linbang')
-            require.mysql.database('linbang', owner='linbang')
-
 
 @task
 def check_out():
@@ -120,21 +112,20 @@ def config_webserver():
             with hide('output'):
                 print green('Collect static files')
 
-                require.directory('/var/static/linbang', use_sudo=True)
-                sudo('cp -r publish/static/* /var/static/linbang/')
+                require.directory('/var/static/jianguo', use_sudo=True)
+                sudo('cp -r publish/static/* /var/static/jianguo/')
                 sudo('rm -r publish')
-                require.directory('/var/media/linbang', owner='www-data', group='www-data', mode='775', use_sudo=True)
-                if exists('/var/wsgi/linbang-backup'):
-                    sudo('rm -r /var/wsgi/linbang-backup')
-                if exists('/var/wsgi/linbang'):
-                    sudo('mv /var/wsgi/linbang /var/wsgi/linbang-backup')
+                if exists('/var/wsgi/jianguo-backup'):
+                    sudo('rm -r /var/wsgi/jianguo-backup')
+                if exists('/var/wsgi/jianguo'):
+                    sudo('mv /var/wsgi/jianguo /var/wsgi/jianguo-backup')
 
-                sudo('mkdir -p /var/wsgi/linbang')
-                sudo('cp -r . /var/wsgi/linbang')
-                sudo('chgrp -R www-data /var/wsgi/linbang')
-                sudo('chown -R www-data /var/wsgi/linbang')
+                sudo('mkdir -p /var/wsgi/jianguo')
+                sudo('cp -r . /var/wsgi/jianguo')
+                sudo('chgrp -R www-data /var/wsgi/jianguo')
+                sudo('chown -R www-data /var/wsgi/jianguo')
 
-            with cd('/var/wsgi/linbang'):
+            with cd('/var/wsgi/jianguo'):
                 # use --noinput to prevent create super user. When super user created, then a profile object needs
                 # to be created, at that point, that table is not created yet. Then it crashes.
                 with hide('output'):
@@ -143,12 +134,11 @@ def config_webserver():
 
                 run('supervisorctl restart gunicorn')
 
-                put('nginx.conf', '/etc/nginx/sites-available/linbang.conf', use_sudo=True)
+                put('nginx.conf', '/etc/nginx/sites-available/jianguo.conf', use_sudo=True)
                 with settings(warn_only=True):
                     sudo('nginx_dissite default')
 
-                sudo('nginx_ensite linbang.conf')
-
+                sudo('nginx_ensite jianguo.conf')
 
 @task
 def deploy():
