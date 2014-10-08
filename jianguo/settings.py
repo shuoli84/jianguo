@@ -45,8 +45,6 @@ INSTALLED_APPS = (
     'allauth',
     'allauth.socialaccount',
     'allauth.account',
-#    'allauth.socialaccount.providers.weibo',
-#    'allauth.socialaccount.providers.google',
     'file_storage',
 )
 
@@ -74,7 +72,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'jianguo',
         'USER': 'jianguo',
-        'PASSWORD': 'jianguo_pass',
+        'PASSWORD': 'jianguo',
         'HOST': ''
     },
 }
