@@ -43,6 +43,12 @@ def install_nginx():
         put("vender/nginx_util/*",  "/usr/bin/", use_sudo=True, mode="770")
 
 @task
+def install_postgres():
+    require.postgres.server()
+    require.postgres.user('jianguo', password='jianguo')
+    require.postgres.database('jianguo', owner='jianguo')
+
+@task
 def init():
     """
     Setup the server for the first time
@@ -64,8 +70,8 @@ def init():
         run('chmod 600 ~/.ssh/id_rsa')
 
         require.deb.packages([
-            'gcc', 'python-all-dev', 'libpq-dev', 'libjpeg-dev', 'libxml2-dev', 'libxslt1-dev', 'libmysqlclient-dev',
-            'libfreetype6-dev', 'libevent-dev'
+            'gcc', 'python-all-dev', 'libpq-dev', 'libjpeg-dev', 'libxml2-dev', 'libxslt1-dev',
+            'libfreetype6-dev', 'libevent-dev', 'supervisor'
         ])
         require.python.pip(version="1.0")
 
@@ -75,9 +81,10 @@ def init():
         sudo('adduser %s www-data' % me)
 
         install_nginx()
+        install_postgres()
 
 @task
-def check_out():
+def checkout():
     banner("check out")
     require.git.command()
     with cd(env.path):
@@ -107,32 +114,28 @@ def config_webserver():
     banner("config web server")
     with virtualenv():
         with cd(os.path.join(env.path, env.depot_name)):
-            require.python.requirements('requirements.txt', index='http://pypi.douban.com/simple')
+            require.python.requirements('requirements.txt')
 
             with hide('output'):
                 print green('Collect static files')
-
+                run("python manage.py collectstatic --noinput")
                 require.directory('/var/static/jianguo', use_sudo=True)
                 sudo('cp -r publish/static/* /var/static/jianguo/')
                 sudo('rm -r publish')
-                if exists('/var/wsgi/jianguo-backup'):
-                    sudo('rm -r /var/wsgi/jianguo-backup')
-                if exists('/var/wsgi/jianguo'):
-                    sudo('mv /var/wsgi/jianguo /var/wsgi/jianguo-backup')
 
-                sudo('mkdir -p /var/wsgi/jianguo')
+                require.directory('/var/wsgi/jianguo',
+                                  use_sudo=True,
+                                  group='www-data',
+                                  owner='www-data')
                 sudo('cp -r . /var/wsgi/jianguo')
-                sudo('chgrp -R www-data /var/wsgi/jianguo')
-                sudo('chown -R www-data /var/wsgi/jianguo')
 
             with cd('/var/wsgi/jianguo'):
-                # use --noinput to prevent create super user. When super user created, then a profile object needs
-                # to be created, at that point, that table is not created yet. Then it crashes.
-                with hide('output'):
-                    run("python manage.py syncdb --noinput")
                 run("python manage.py migrate")
 
-                run('supervisorctl restart gunicorn')
+                print green('Copy supervisor conf')
+                sudo('cp supervisord.conf /etc/supervisor/conf.d/jianguo.conf')
+                sudo('supervisorctl update')
+                sudo('supervisorctl start jianguo')
 
                 put('nginx.conf', '/etc/nginx/sites-available/jianguo.conf', use_sudo=True)
                 with settings(warn_only=True):
@@ -143,7 +146,7 @@ def config_webserver():
 @task
 def deploy():
     execute(init)
-    execute(check_out)
+    execute(checkout)
     execute(config_webserver)
     banner('Deploy Succeeded. Go Home!')
 

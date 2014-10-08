@@ -8,3 +8,4 @@ requests==2.4.1
 psycopg2==2.5.4
 bleach==1.4
 ipython==2.3.0
+uWSGI==2.0.7
