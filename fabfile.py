@@ -15,7 +15,6 @@ from fabtools.python import virtualenv as python_virtualenv
 def dev():
     env.host_string = 'jianguo.o-value.com'
     env.path = '/var/deploy/jianguo'
-    env.activate = 'source ' + env.path + '/virt-python/bin/activate'
     env.depot = 'git@github.com:shuoli84/jianguo.git'
     env.depot_name = 'jianguo'
     env.branch = 'master'
@@ -143,6 +142,7 @@ def config_webserver():
 
                 sudo('nginx_ensite jianguo.conf')
                 sudo('service nginx reload')
+
 @task
 def deploy():
     execute(init)
